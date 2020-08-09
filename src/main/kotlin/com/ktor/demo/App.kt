@@ -8,6 +8,7 @@ import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.jackson.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 
