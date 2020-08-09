@@ -4,6 +4,7 @@
 package com.ktor.demo
 
 import io.ktor.application.*
+import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -16,12 +17,24 @@ class App {
             return "Hello world."
         }
 }
-fun main(args: Array<String>) {
-    embeddedServer(Netty, 8080) {
-        routing {
-            get("/") {
-                call.respondText("Hello World", ContentType.Text.Plain)
-            }
+
+fun Application.module() {
+    install(DefaultHeaders)
+    install(ContentNegotiation) {
+        jackson {
         }
-    }.start(wait = true)
+    }
+    install(Routing) {
+        get("/") {
+            call.respondText("Hello World")
+        }
+        get("/health") {
+            call.respond(mapOf("OK" to true))
+        }
+    }
 }
+
+fun main(args: Array<String>) {
+    embeddedServer(Netty, 8080, watchPaths = listOf("AppKt"), module = Application::module).start()
+}
+
